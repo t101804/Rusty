@@ -1,1 +1,1 @@
-/home/replican/Desktop/Projects/Rust/basic/target/debug/scrapper: /home/replican/Desktop/Projects/Rust/basic/src/main.rs
+/home/replican/Desktop/Projects/Rust/basic/target/debug/scrapper: /home/replican/Desktop/Projects/Rust/basic/src/io.rs /home/replican/Desktop/Projects/Rust/basic/src/main.rs /home/replican/Desktop/Projects/Rust/basic/src/mstr/mod.rs

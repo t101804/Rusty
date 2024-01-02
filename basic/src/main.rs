@@ -1,5 +1,6 @@
-use std::thread::sleep;
-
+use std::{io::Read, thread::sleep};
+mod io;
+mod mstr;
 // return an int and sleep for 1 second
 fn do_something() -> i32 {
     let mut x = 0;
@@ -68,10 +69,135 @@ fn this(method: i32, max_value: i32) {
     }
 }
 
+fn axray() {
+    let mut i = 0;
+    // let mixed = [1, false, "person"];
+    let mut nums: [i32; 3] = [1; 3];
+    let mut person: [&str; 3] = ["haxor", "leet", "skid"];
+    nums[1] = 2;
+    nums[2] = 3;
+    println!("nums {:?}", nums);
+    person[0] = "rep";
+    println!("total rank: {}\nrank {:?}", person.len(), person);
+    // for i in 0..person.len() {
+    //     println!("i:{} person:{}", i, person[i])
+    // }
+    // loop {
+    //     if i < person.len() {
+    //         println!("i: {}, person:{}", i, person[i]);
+    //         i += 1;
+    //     } else {
+    //         break;
+    //     }
+    //     // if i == names.len() {
+    //     //     break;
+    //     // }
+    //     // println!("i: {}, person:{}", i, person[i]);
+    //     // i += 1;
+    // }
+    // while i < person.len() {
+    //     println!("{}", person[i]);
+    //     i += 1;
+    // }
+
+    for (i, name) in person.iter().enumerate() {
+        println!("i:{} person:{}", i, name);
+    }
+}
+
+fn playing() {
+    let mut tuple_a = ("jason", 27, ["racing", "working out"], true);
+    tuple_a.0 = "rep";
+    println!("{tuple_a:?}");
+    let mut v = vec!["google.com", "kpu.go.id", "velixs.com"];
+    v.push("rust.com");
+    // for (i, site) in v.iter().enumerate() {
+    //     println!("{i} : {site}");
+    // }
+    for i in &v {
+        println!("{i}");
+    }
+    for i in 0..v.len() {
+        println!("{}", v[i])
+    }
+}
+
+fn stakeinpt() -> String {
+    println!("input ur name : ");
+    let mut msg = String::new();
+    let getinpt = std::io::stdin();
+    let read = getinpt.read_line(&mut msg);
+    if read.is_err() {
+        println!("err! : {:?}", read.err());
+    }
+    return msg;
+}
+
+mod utilities {
+    pub mod password {
+        use std::{result, str::Bytes};
+
+        pub fn bcryptor(text: &str) -> String {
+            let result = bcrypt::hash(text, bcrypt::DEFAULT_COST).unwrap();
+            return result;
+        }
+        pub fn verifybcrypte(plain: &str, text: &str) -> bool {
+            bcrypt::verify(plain, text).unwrap()
+        }
+        pub fn cryptx(text: &str, salt: &str) -> String {
+            let x: Vec<_> = text.chars().collect();
+
+            let mut result = std::string::String::new();
+            for (i, chars) in text.chars().into_iter().enumerate() {
+                println!("{}", x[i]);
+                for (si, s) in salt.chars().into_iter().enumerate() {
+                    let encrypted_char = chars.to_string() + &s.to_string() + &x[i].to_string();
+                    result.push_str(&encrypted_char)
+                }
+            }
+            result
+        }
+        pub fn decrypt(encrypted_text: &str, salt: &str) -> String {
+            let mut result = String::new();
+            let mut encrypted_chars = encrypted_text.chars();
+
+            while let Some(c) = encrypted_chars.next() {
+                if let Some(s) = salt.chars().next() {
+                    if let Some(original_char) = encrypted_chars.next() {
+                        result.push(original_char);
+                        result.push(s);
+                        result.push(c);
+                    }
+                }
+            }
+
+            result
+        }
+    }
+}
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    do_something();
-    parse("hi");
-    this(3, 5);
-    println!("test xor");
+    print!("input username : ");
+    let msg = io::get_inpt_user();
+    print!("input salt : ");
+    let salt = io::get_inpt_user();
+    let urpass = mstr::generatestring(8);
+    let hashed = utilities::password::bcryptor(&urpass);
+    let cryp = utilities::password::cryptx(&urpass, &salt);
+    let dec = utilities::password::decrypt(&urpass, &salt);
+    println!(
+        "username: {msg}, password: {hashed}, cryptx: {}, decryptx: {}",
+        cryp, dec
+    );
+    /* let msg = io::get_inpt_user();
+    //let msg = stakeinpt();
+    let greet = mstr::multiply_name(&msg);
+    println!("{greet}"); */
+    //do_something();
+    //let greeting: &str = parse("hi");
+    //println!("{greeting}");
+    //this(3, 5);
+    //axray();
+    // playing();
+
     Ok(())
 }
